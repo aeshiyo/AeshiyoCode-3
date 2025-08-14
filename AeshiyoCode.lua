@@ -22,10 +22,12 @@ local function CreateLoader()
     Title.Text = "Aeshiyomm2"
     Title.TextColor3 = Color3.fromRGB(0, 255, 200)
     Title.TextSize = 20
-    Title.Font = Enum.Font.SciFi
+    Title.Font = Enum.Font.Cartoon
     Title.BackgroundTransparency = 1
     Title.Position = UDim2.new(0.1, 0, 0.1, 0)
     Title.Size = UDim2.new(0.8, 0, 0, 25)
+    Title.TextStrokeTransparency = 0.5
+    Title.TextStrokeColor3 = Color3.new(0,0,0)
 
     LoadingBar.Name = "LoadingBar"
     LoadingBar.Parent = MainFrame
@@ -45,13 +47,15 @@ local function CreateLoader()
     AuthorLabel.Text = "AeshiyoCode<3"
     AuthorLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
     AuthorLabel.TextSize = 12
-    AuthorLabel.Font = Enum.Font.SciFi
+    AuthorLabel.Font = Enum.Font.Cartoon
     AuthorLabel.BackgroundTransparency = 1
     AuthorLabel.Position = UDim2.new(0.1, 0, 0.75, 0)
     AuthorLabel.Size = UDim2.new(0.8, 0, 0, 15)
+    AuthorLabel.TextStrokeTransparency = 0.5
+    AuthorLabel.TextStrokeColor3 = Color3.new(0,0,0)
 
     local startTime = tick()
-    local duration = 5 -- 5 секунд загрузки
+    local duration = 5
 
     coroutine.wrap(function()
         while tick() - startTime < duration do
