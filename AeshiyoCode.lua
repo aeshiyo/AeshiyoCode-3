@@ -33,13 +33,12 @@ local Settings = {
     }
 }
 
--- Создание основного интерфейса
+-- Создание интерфейса (оставляем ваш красивый интерфейс без изменений)
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "MM2HackGUI"
 ScreenGui.Parent = CoreGui
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- Главный фрейм
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
 MainFrame.Parent = ScreenGui
@@ -50,12 +49,10 @@ MainFrame.Size = UDim2.new(0, 250, 0, 0)
 MainFrame.ClipsDescendants = true
 MainFrame.Visible = false
 
--- Скругление углов
 local UICorner = Instance.new("UICorner")
 UICorner.CornerRadius = UDim.new(0, 6)
 UICorner.Parent = MainFrame
 
--- Тень
 local UIStroke = Instance.new("UIStroke")
 UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 UIStroke.Color = Color3.fromRGB(60, 60, 70)
@@ -63,7 +60,6 @@ UIStroke.LineJoinMode = Enum.LineJoinMode.Round
 UIStroke.Thickness = 1
 UIStroke.Parent = MainFrame
 
--- Заголовок
 local Title = Instance.new("TextLabel")
 Title.Name = "Title"
 Title.Parent = MainFrame
@@ -75,12 +71,10 @@ Title.TextColor3 = Color3.fromRGB(220, 220, 220)
 Title.TextSize = 16
 Title.BorderSizePixel = 0
 
--- Скругление заголовка
 local TitleCorner = Instance.new("UICorner")
 TitleCorner.CornerRadius = UDim.new(0, 6)
 TitleCorner.Parent = Title
 
--- Иконка закрытия
 local CloseButton = Instance.new("TextButton")
 CloseButton.Name = "CloseButton"
 CloseButton.Parent = Title
@@ -93,7 +87,6 @@ CloseButton.TextColor3 = Color3.fromRGB(220, 220, 220)
 CloseButton.TextSize = 20
 CloseButton.TextStrokeTransparency = 0.8
 
--- Контейнер для кнопок
 local ButtonsContainer = Instance.new("Frame")
 ButtonsContainer.Name = "ButtonsContainer"
 ButtonsContainer.Parent = MainFrame
@@ -138,7 +131,6 @@ local function CreateButton(name, text, position, callback)
     statusCorner.CornerRadius = UDim.new(0, 10)
     statusCorner.Parent = status
     
-    -- Анимации при наведении
     button.MouseEnter:Connect(function()
         game:GetService("TweenService"):Create(
             button,
@@ -173,7 +165,6 @@ local function CreateButton(name, text, position, callback)
     
     button.MouseButton1Click:Connect(function()
         callback()
-        -- Анимация переключения статуса
         local statusColor = button.Status.BackgroundColor3 == Color3.fromRGB(255, 50, 50) and 
                            Color3.fromRGB(50, 255, 50) or 
                            Color3.fromRGB(255, 50, 50)
@@ -188,7 +179,7 @@ local function CreateButton(name, text, position, callback)
     return button
 end
 
--- Создание кнопок
+-- Создаем кнопки и сохраняем их ссылки
 local AimbotButton = CreateButton("AimbotToggle", "Aimbot", UDim2.new(0, 0, 0, 0), function()
     Settings.Aimbot.Enabled = not Settings.Aimbot.Enabled
     AimbotButton.Text = "Aimbot: " .. (Settings.Aimbot.Enabled and "ON" or "OFF")
@@ -219,7 +210,6 @@ local function ToggleMenu()
     MainFrame.Visible = not MainFrame.Visible
     
     if MainFrame.Visible then
-        -- Анимация открытия
         local tween = TweenService:Create(
             MainFrame,
             TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
@@ -227,7 +217,6 @@ local function ToggleMenu()
         )
         tween:Play()
     else
-        -- Анимация закрытия
         local tween = TweenService:Create(
             MainFrame,
             TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
@@ -237,18 +226,15 @@ local function ToggleMenu()
     end
 end
 
--- Кнопка закрытия
 CloseButton.MouseButton1Click:Connect(ToggleMenu)
 
--- Горячая клавиша для меню
 UserInputService.InputBegan:Connect(function(input, gameProcessed)
     if input.KeyCode == Enum.KeyCode.RightShift then
         ToggleMenu()
     end
 end)
 
--- Остальной код (aimbot, ESP и т.д.) остается без изменений
--- ... [вставьте здесь остальную часть вашего исходного кода] ...
+-- ВАЖНО: Добавляем недостающие функции для работы функционала
 
 local function GetTeam(Player)
     if not Player.Character then return nil end
@@ -304,16 +290,24 @@ local function GetClosestPlayer()
     return closestPlayer
 end
 
+-- Обработчик аимбота
+local AimbotConnection
 UserInputService.InputBegan:Connect(function(input, gameProcessed)
     if gameProcessed then return end
+    
+    -- Аимбот
     if input.UserInputType == Settings.Aimbot.Keybind and Settings.Aimbot.Enabled then
         local target = GetClosestPlayer()
         if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
             local rootPart = target.Character.HumanoidRootPart
-            local connection
-            connection = RunService.RenderStepped:Connect(function()
-                if not UserInputService:IsMouseButtonPressed(Settings.Aimbot.Keybind) then
-                    connection:Disconnect()
+            
+            if AimbotConnection then
+                AimbotConnection:Disconnect()
+            end
+            
+            AimbotConnection = RunService.RenderStepped:Connect(function()
+                if not UserInputService:IsMouseButtonPressed(Settings.Aimbot.Keybind) or not Settings.Aimbot.Enabled then
+                    AimbotConnection:Disconnect()
                     return
                 end
                 
@@ -326,6 +320,7 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
     end
 end)
 
+-- ESP система
 local ESPObjects = {}
 
 local function CreateESP(player)
@@ -363,6 +358,7 @@ local function CreateESP(player)
             return
         end
         
+        -- Текст с именем и расстоянием
         if not self.Drawings.Text then
             self.Drawings.Text = Drawing.new("Text")
             self.Drawings.Text.Size = Settings.ESP.TextSize
@@ -386,12 +382,14 @@ local function CreateESP(player)
     ESPObjects[player] = esp
 end
 
+-- Инициализация ESP для всех игроков
 for _, player in ipairs(Players:GetPlayers()) do
     if player ~= LocalPlayer then
         CreateESP(player)
     end
 end
 
+-- Обработчики новых игроков
 Players.PlayerAdded:Connect(function(player)
     CreateESP(player)
 end)
@@ -402,12 +400,38 @@ Players.PlayerRemoving:Connect(function(player)
     end
 end)
 
+-- Система SpeedHack
+local originalWalkSpeed = 16
+local SpeedHackConnection
+
+local function UpdateSpeedHack()
+    if SpeedHackConnection then
+        SpeedHackConnection:Disconnect()
+    end
+    
+    if Settings.Misc.SpeedHack then
+        SpeedHackConnection = RunService.Heartbeat:Connect(function()
+            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+                LocalPlayer.Character.Humanoid.WalkSpeed = originalWalkSpeed * Settings.Misc.SpeedMultiplier
+            end
+        end)
+    else
+        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+            LocalPlayer.Character.Humanoid.WalkSpeed = originalWalkSpeed
+        end
+    end
+end
+
+-- Обновляем SpeedHack при изменении настроек
+SpeedButton.MouseButton1Click:Connect(function()
+    Settings.Misc.SpeedHack = not Settings.Misc.SpeedHack
+    SpeedButton.Text = "Speed: " .. (Settings.Misc.SpeedHack and "ON" or "OFF")
+    UpdateSpeedHack()
+end)
+
+-- Основной цикл обновления ESP
 RunService.RenderStepped:Connect(function()
     for _, esp in pairs(ESPObjects) do
         esp:Update()
-    end
-    
-    if Settings.Misc.SpeedHack and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
-        LocalPlayer.Character.Humanoid.WalkSpeed = 16 * Settings.Misc.SpeedMultiplier
     end
 end)
