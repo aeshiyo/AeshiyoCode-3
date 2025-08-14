@@ -53,7 +53,7 @@ local function CreateLoader()
     Progress.Size = UDim2.new(0, 0, 1, 0)
 
     local startTime = tick()
-    local duration = 8
+    local duration = 3
 
     coroutine.wrap(function()
         while tick() - startTime < duration do
