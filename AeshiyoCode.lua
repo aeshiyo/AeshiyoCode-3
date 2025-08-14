@@ -1,70 +1,123 @@
-local function CreateLoader()
-    local LoaderUI = Instance.new("ScreenGui")
-    local MainFrame = Instance.new("Frame")
-    local Title = Instance.new("TextLabel")
-    local LoadingBar = Instance.new("Frame")
-    local Progress = Instance.new("Frame")
-    local AuthorLabel = Instance.new("TextLabel")
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "MM2HubUI"
+ScreenGui.Parent = game:GetService("CoreGui")
 
-    LoaderUI.Name = "AeshiyoLoader"
-    LoaderUI.Parent = game:GetService("CoreGui")
-    LoaderUI.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+MainFrame.BorderColor3 = Color3.fromRGB(255, 216, 0)
+MainFrame.Position = UDim2.new(0.5, -175, 0.5, -150)
+MainFrame.Size = UDim2.new(0, 350, 0, 300)
 
-    MainFrame.Name = "MainFrame"
-    MainFrame.Parent = LoaderUI
-    MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
-    MainFrame.BorderSizePixel = 0
-    MainFrame.Position = UDim2.new(0.4, 0, 0.45, 0)
-    MainFrame.Size = UDim2.new(0, 250, 0, 100)
+local Title = Instance.new("TextLabel")
+Title.Name = "Title"
+Title.Parent = MainFrame
+Title.Text = "Aeshiyocode<3 | Murder Mystery 2 | V1.0 | t.me"
+Title.TextColor3 = Color3.fromRGB(255, 216, 0)
+Title.TextSize = 18
+Title.Font = Enum.Font.SourceSansBold
+Title.BackgroundTransparency = 1
+Title.Position = UDim2.new(0.1, 0, 0.05, 0)
+Title.Size = UDim2.new(0.8, 0, 0, 25)
+Title.TextStrokeTransparency = 0.5
+Title.TextStrokeColor3 = Color3.new(0,0,0)
 
-    Title.Name = "Title"
-    Title.Parent = MainFrame
-    Title.Text = "Aeshiyomm2"
-    Title.TextColor3 = Color3.fromRGB(0, 255, 200)
-    Title.TextSize = 20
-    Title.Font = Enum.Font.Cartoon
-    Title.BackgroundTransparency = 1
-    Title.Position = UDim2.new(0.1, 0, 0.1, 0)
-    Title.Size = UDim2.new(0.8, 0, 0, 25)
-    Title.TextStrokeTransparency = 0.5
-    Title.TextStrokeColor3 = Color3.new(0,0,0)
+local Tabs = {"Main", "Visual", "Player", "Teleport", "Target", "Animations", "Settings"}
+local TabButtons = Instance.new("Frame")
+TabButtons.Name = "TabButtons"
+TabButtons.Parent = MainFrame
+TabButtons.BackgroundTransparency = 1
+TabButtons.Position = UDim2.new(0.05, 0, 0.15, 0)
+TabButtons.Size = UDim2.new(0.9, 0, 0, 30)
 
-    LoadingBar.Name = "LoadingBar"
-    LoadingBar.Parent = MainFrame
-    LoadingBar.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
-    LoadingBar.BorderSizePixel = 0
-    LoadingBar.Position = UDim2.new(0.1, 0, 0.5, 0)
-    LoadingBar.Size = UDim2.new(0.8, 0, 0, 10)
+local UIListLayout = Instance.new("UIListLayout")
+UIListLayout.Parent = TabButtons
+UIListLayout.FillDirection = Enum.FillDirection.Horizontal
+UIListLayout.Padding = UDim.new(0, 5)
 
-    Progress.Name = "Progress"
-    Progress.Parent = LoadingBar
-    Progress.BackgroundColor3 = Color3.fromRGB(0, 255, 200)
-    Progress.BorderSizePixel = 0
-    Progress.Size = UDim2.new(0, 0, 1, 0)
-
-    AuthorLabel.Name = "AuthorLabel"
-    AuthorLabel.Parent = MainFrame
-    AuthorLabel.Text = "AeshiyoCode<3"
-    AuthorLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
-    AuthorLabel.TextSize = 12
-    AuthorLabel.Font = Enum.Font.Cartoon
-    AuthorLabel.BackgroundTransparency = 1
-    AuthorLabel.Position = UDim2.new(0.1, 0, 0.75, 0)
-    AuthorLabel.Size = UDim2.new(0.8, 0, 0, 15)
-    AuthorLabel.TextStrokeTransparency = 0.5
-    AuthorLabel.TextStrokeColor3 = Color3.new(0,0,0)
-
-    local startTime = tick()
-    local duration = 5
-
-    coroutine.wrap(function()
-        while tick() - startTime < duration do
-            local progress = (tick() - startTime) / duration
-            Progress.Size = UDim2.new(progress, 0, 1, 0)
-            game:GetService("RunService").RenderStepped:Wait()
-        end
-        LoaderUI:Destroy()
-    end)()
+for _, tab in pairs(Tabs) do
+    local Button = Instance.new("TextButton")
+    Button.Name = tab
+    Button.Parent = TabButtons
+    Button.Text = tab
+    Button.TextColor3 = Color3.fromRGB(255, 216, 0)
+    Button.TextSize = 14
+    Button.Font = Enum.Font.SourceSansBold
+    Button.BackgroundTransparency = 1
+    Button.Size = UDim2.new(0, 45, 0, 20)
 end
 
-CreateLoader()
+local Categories = {
+    {"Rage Functions", {
+        "Kill All V2",
+        "Attack Speed (CPS) [20/100]"
+    }},
+    {"Kill Player (Murder)", {
+        "Select Player",
+        "Kill Target"
+    }},
+    {"Rage aim", {
+        "Prediction Power [12/30]",
+        "Target Bone [Head]",
+        "Enable Aim"
+    }},
+    {"Input", {
+        "Input Infinite yield"
+    }},
+    {"Auto Farm", {
+        "Auto Farm Coins",
+        "Movement Speed [25/100]",
+        "Check Interval [0.1/0.5]"
+    }},
+    {"Grab Gun", {
+        "Grab Gun",
+        "Auto Grab Gun"
+    }}
+}
+
+local ContentFrame = Instance.new("ScrollingFrame")
+ContentFrame.Name = "ContentFrame"
+ContentFrame.Parent = MainFrame
+ContentFrame.BackgroundTransparency = 1
+ContentFrame.Position = UDim2.new(0.05, 0, 0.25, 0)
+ContentFrame.Size = UDim2.new(0.9, 0, 0, 200)
+ContentFrame.CanvasSize = UDim2.new(0, 0, 0, #Categories * 60)
+ContentFrame.ScrollBarThickness = 5
+
+local UIListLayout2 = Instance.new("UIListLayout")
+UIListLayout2.Parent = ContentFrame
+UIListLayout2.Padding = UDim.new(0, 10)
+
+for i, category in pairs(Categories) do
+    local CategoryFrame = Instance.new("Frame")
+    CategoryFrame.Name = category[1]
+    CategoryFrame.Parent = ContentFrame
+    CategoryFrame.BackgroundTransparency = 1
+    CategoryFrame.Size = UDim2.new(1, 0, 0, 50)
+    
+    local CategoryLabel = Instance.new("TextLabel")
+    CategoryLabel.Name = "CategoryLabel"
+    CategoryLabel.Parent = CategoryFrame
+    CategoryLabel.Text = category[1]
+    CategoryLabel.TextColor3 = Color3.fromRGB(255, 216, 0)
+    CategoryLabel.TextSize = 16
+    CategoryLabel.Font = Enum.Font.SourceSansBold
+    CategoryLabel.BackgroundTransparency = 1
+    CategoryLabel.Position = UDim2.new(0, 0, 0, 0)
+    CategoryLabel.Size = UDim2.new(1, 0, 0, 20)
+    
+    for j, option in pairs(category[2]) do
+        local OptionButton = Instance.new("TextButton")
+        OptionButton.Name = option
+        OptionButton.Parent = CategoryFrame
+        OptionButton.Text = "  "..option
+        OptionButton.TextXAlignment = Enum.TextXAlignment.Left
+        OptionButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+        OptionButton.TextSize = 14
+        OptionButton.Font = Enum.Font.SourceSans
+        OptionButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+        OptionButton.Position = UDim2.new(0, 0, 0, 20 + (j-1)*25)
+        OptionButton.Size = UDim2.new(1, 0, 0, 20)
+    end
+end
