@@ -67,9 +67,11 @@ local function CreateLoader()
 end
 
 local function CreateMainUI()
+    local player = game:GetService("Players").LocalPlayer
     local ScreenGui = Instance.new("ScreenGui")
     ScreenGui.Name = "AeshiyoMM2UI"
-    ScreenGui.Parent = game:GetService("CoreGui")
+    ScreenGui.Parent = player:WaitForChild("PlayerGui")
+    ScreenGui.ResetOnSpawn = false
     ScreenGui.Enabled = false
 
     local MainFrame = Instance.new("Frame")
@@ -119,10 +121,17 @@ local function CreateMainUI()
     end
 
     local UIS = game:GetService("UserInputService")
-    UIS.InputBegan:Connect(function(input, gameProcessed)
-        if input.KeyCode == Enum.KeyCode.Insert then
+    local connection
+    connection = UIS.InputBegan:Connect(function(input, gameProcessed)
+        if not gameProcessed and input.KeyCode == Enum.KeyCode.Insert then
             ScreenGui.Enabled = not ScreenGui.Enabled
         end
+    end)
+
+    player.CharacterAdded:Connect(function()
+        connection:Disconnect()
+        ScreenGui:Destroy()
+        CreateMainUI()
     end)
 end
 
