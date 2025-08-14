@@ -8,233 +8,311 @@ local LocalPlayer = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
 local Mouse = LocalPlayer:GetMouse()
 
--- Настройки
 local Settings = {
-    Aimbot = {
-        Enabled = false, 
-        FOV = 100, 
-        Smoothness = 20, 
-        TeamCheck = true, 
-        VisibleCheck = true, 
-        Keybind = Enum.UserInputType.MouseButton2
-    },
-    ESP = {
-        Enabled = false, 
-        ShowTeam = false, 
-        ShowDistance = true, 
-        TextSize = 13,
-        Boxes = false,
-        Tracers = false
-    },
-    Misc = {
-        AutoFarm = false, 
-        SpeedHack = false, 
-        SpeedMultiplier = 1.5
-    }
+    Aimbot = {Enabled = false, FOV = 90, Smoothness = 10, TeamCheck = true, VisibleCheck = true, Keybind = Enum.UserInputType.MouseButton2},
+    ESP = {Enabled = false, Boxes = false, Names = true, Distance = true, Skeletons = false, TeamCheck = true},
+    Movement = {Speed = false, SpeedValue = 25, Jump = false, JumpPower = 50}
 }
 
--- Создание интерфейса (оставляем ваш красивый интерфейс без изменений)
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "MM2HackGUI"
+ScreenGui.Name = "CyberHackUI"
 ScreenGui.Parent = CoreGui
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
 MainFrame.Parent = ScreenGui
-MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
 MainFrame.BorderSizePixel = 0
-MainFrame.Position = UDim2.new(0.05, 0, 0.3, 0)
-MainFrame.Size = UDim2.new(0, 250, 0, 0)
+MainFrame.Position = UDim2.new(0.1, 0, 0.2, 0)
+MainFrame.Size = UDim2.new(0, 400, 0, 350)
 MainFrame.ClipsDescendants = true
-MainFrame.Visible = false
 
 local UICorner = Instance.new("UICorner")
-UICorner.CornerRadius = UDim.new(0, 6)
+UICorner.CornerRadius = UDim.new(0, 8)
 UICorner.Parent = MainFrame
 
 local UIStroke = Instance.new("UIStroke")
-UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-UIStroke.Color = Color3.fromRGB(60, 60, 70)
-UIStroke.LineJoinMode = Enum.LineJoinMode.Round
-UIStroke.Thickness = 1
+UIStroke.Color = Color3.fromRGB(180, 120, 255)
+UIStroke.Thickness = 2
 UIStroke.Parent = MainFrame
 
-local Title = Instance.new("TextLabel")
-Title.Name = "Title"
-Title.Parent = MainFrame
-Title.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
-Title.Size = UDim2.new(1, 0, 0, 40)
-Title.Font = Enum.Font.GothamSemibold
-Title.Text = "MM2 HACK MENU"
-Title.TextColor3 = Color3.fromRGB(220, 220, 220)
-Title.TextSize = 16
-Title.BorderSizePixel = 0
+local TabButtons = Instance.new("Frame")
+TabButtons.Name = "TabButtons"
+TabButtons.Parent = MainFrame
+TabButtons.BackgroundTransparency = 1
+TabButtons.Size = UDim2.new(1, 0, 0, 40)
 
-local TitleCorner = Instance.new("UICorner")
-TitleCorner.CornerRadius = UDim.new(0, 6)
-TitleCorner.Parent = Title
+local MainTab = Instance.new("TextButton")
+MainTab.Name = "MainTab"
+MainTab.Parent = TabButtons
+MainTab.Size = UDim2.new(0.33, -4, 1, 0)
+MainTab.Position = UDim2.new(0, 0, 0, 0)
+MainTab.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+MainTab.Text = "MAIN"
+MainTab.TextColor3 = Color3.fromRGB(220, 220, 220)
+MainTab.Font = Enum.Font.GothamSemibold
+MainTab.TextSize = 14
+MainTab.BorderSizePixel = 0
 
-local CloseButton = Instance.new("TextButton")
-CloseButton.Name = "CloseButton"
-CloseButton.Parent = Title
-CloseButton.BackgroundTransparency = 1
-CloseButton.Position = UDim2.new(0.9, 0, 0, 0)
-CloseButton.Size = UDim2.new(0.1, 0, 1, 0)
-CloseButton.Font = Enum.Font.GothamBold
-CloseButton.Text = "×"
-CloseButton.TextColor3 = Color3.fromRGB(220, 220, 220)
-CloseButton.TextSize = 20
-CloseButton.TextStrokeTransparency = 0.8
+local VisualTab = Instance.new("TextButton")
+VisualTab.Name = "VisualTab"
+VisualTab.Parent = TabButtons
+VisualTab.Size = UDim2.new(0.33, -4, 1, 0)
+VisualTab.Position = UDim2.new(0.33, 0, 0, 0)
+VisualTab.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+VisualTab.Text = "VISUAL"
+VisualTab.TextColor3 = Color3.fromRGB(220, 220, 220)
+VisualTab.Font = Enum.Font.GothamSemibold
+VisualTab.TextSize = 14
+VisualTab.BorderSizePixel = 0
 
-local ButtonsContainer = Instance.new("Frame")
-ButtonsContainer.Name = "ButtonsContainer"
-ButtonsContainer.Parent = MainFrame
-ButtonsContainer.BackgroundTransparency = 1
-ButtonsContainer.Position = UDim2.new(0, 10, 0, 45)
-ButtonsContainer.Size = UDim2.new(1, -20, 1, -50)
+local PlayerTab = Instance.new("TextButton")
+PlayerTab.Name = "PlayerTab"
+PlayerTab.Parent = TabButtons
+PlayerTab.Size = UDim2.new(0.33, -4, 1, 0)
+PlayerTab.Position = UDim2.new(0.66, 0, 0, 0)
+PlayerTab.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+PlayerTab.Text = "PLAYER"
+PlayerTab.TextColor3 = Color3.fromRGB(220, 220, 220)
+PlayerTab.Font = Enum.Font.GothamSemibold
+PlayerTab.TextSize = 14
+PlayerTab.BorderSizePixel = 0
 
--- Функция для создания кнопок
-local function CreateButton(name, text, position, callback)
-    local button = Instance.new("TextButton")
-    button.Name = name
-    button.Parent = ButtonsContainer
-    button.BackgroundColor3 = Color3.fromRGB(40, 40, 45)
-    button.Position = position
-    button.Size = UDim2.new(1, 0, 0, 35)
-    button.Font = Enum.Font.Gotham
-    button.Text = text
-    button.TextColor3 = Color3.fromRGB(220, 220, 220)
-    button.TextSize = 14
-    button.AutoButtonColor = false
-    button.BorderSizePixel = 0
-    
-    local buttonCorner = Instance.new("UICorner")
-    buttonCorner.CornerRadius = UDim.new(0, 4)
-    buttonCorner.Parent = button
-    
-    local buttonStroke = Instance.new("UIStroke")
-    buttonStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-    buttonStroke.Color = Color3.fromRGB(60, 60, 70)
-    buttonStroke.Thickness = 1
-    buttonStroke.Parent = button
-    
-    local status = Instance.new("Frame")
-    status.Name = "Status"
-    status.Parent = button
-    status.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
-    status.BorderSizePixel = 0
-    status.Position = UDim2.new(0.85, 0, 0.2, 0)
-    status.Size = UDim2.new(0, 20, 0, 20)
-    
-    local statusCorner = Instance.new("UICorner")
-    statusCorner.CornerRadius = UDim.new(0, 10)
-    statusCorner.Parent = status
-    
-    button.MouseEnter:Connect(function()
-        game:GetService("TweenService"):Create(
-            button,
-            TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-            {BackgroundColor3 = Color3.fromRGB(45, 45, 50)}
-        ):Play()
-    end)
-    
-    button.MouseLeave:Connect(function()
-        game:GetService("TweenService"):Create(
-            button,
-            TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-            {BackgroundColor3 = Color3.fromRGB(40, 40, 45)}
-        ):Play()
-    end)
-    
-    button.MouseButton1Down:Connect(function()
-        game:GetService("TweenService"):Create(
-            button,
-            TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-            {BackgroundColor3 = Color3.fromRGB(35, 35, 40)}
-        ):Play()
-    end)
-    
-    button.MouseButton1Up:Connect(function()
-        game:GetService("TweenService"):Create(
-            button,
-            TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-            {BackgroundColor3 = Color3.fromRGB(45, 45, 50)}
-        ):Play()
-    end)
-    
-    button.MouseButton1Click:Connect(function()
-        callback()
-        local statusColor = button.Status.BackgroundColor3 == Color3.fromRGB(255, 50, 50) and 
-                           Color3.fromRGB(50, 255, 50) or 
-                           Color3.fromRGB(255, 50, 50)
-        
-        game:GetService("TweenService"):Create(
-            button.Status,
-            TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-            {BackgroundColor3 = statusColor}
-        ):Play()
-    end)
-    
-    return button
-end
+local TabContent = Instance.new("Frame")
+TabContent.Name = "TabContent"
+TabContent.Parent = MainFrame
+TabContent.BackgroundTransparency = 1
+TabContent.Position = UDim2.new(0, 10, 0, 45)
+TabContent.Size = UDim2.new(1, -20, 1, -50)
 
--- Создаем кнопки и сохраняем их ссылки
-local AimbotButton = CreateButton("AimbotToggle", "Aimbot", UDim2.new(0, 0, 0, 0), function()
+local MainContent = Instance.new("ScrollingFrame")
+MainContent.Name = "MainContent"
+MainContent.Parent = TabContent
+MainContent.Size = UDim2.new(1, 0, 1, 0)
+MainContent.BackgroundTransparency = 1
+MainContent.ScrollBarThickness = 3
+MainContent.ScrollBarImageColor3 = Color3.fromRGB(180, 120, 255)
+
+local AimbotToggle = Instance.new("TextButton")
+AimbotToggle.Name = "AimbotToggle"
+AimbotToggle.Parent = MainContent
+AimbotToggle.Size = UDim2.new(1, 0, 0, 30)
+AimbotToggle.Position = UDim2.new(0, 0, 0, 0)
+AimbotToggle.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+AimbotToggle.Text = ""
+AimbotToggle.AutoButtonColor = false
+
+local AimbotLabel = Instance.new("TextLabel")
+AimbotLabel.Parent = AimbotToggle
+AimbotLabel.Size = UDim2.new(0.7, 0, 1, 0)
+AimbotLabel.Position = UDim2.new(0, 10, 0, 0)
+AimbotLabel.BackgroundTransparency = 1
+AimbotLabel.Text = "Aimbot"
+AimbotLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+AimbotLabel.Font = Enum.Font.Gotham
+AimbotLabel.TextSize = 14
+AimbotLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local AimbotStatus = Instance.new("Frame")
+AimbotStatus.Parent = AimbotToggle
+AimbotStatus.Size = UDim2.new(0, 20, 0, 20)
+AimbotStatus.Position = UDim2.new(0.9, -20, 0.15, 0)
+AimbotStatus.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+
+local FOVSlider = Instance.new("Frame")
+FOVSlider.Name = "FOVSlider"
+FOVSlider.Parent = MainContent
+FOVSlider.Size = UDim2.new(1, 0, 0, 40)
+FOVSlider.Position = UDim2.new(0, 0, 0, 40)
+FOVSlider.BackgroundTransparency = 1
+
+local FOVLabel = Instance.new("TextLabel")
+FOVLabel.Parent = FOVSlider
+FOVLabel.Size = UDim2.new(0.5, 0, 0, 20)
+FOVLabel.Position = UDim2.new(0, 0, 0, 0)
+FOVLabel.BackgroundTransparency = 1
+FOVLabel.Text = "FOV: "..Settings.Aimbot.FOV
+FOVLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+FOVLabel.Font = Enum.Font.Gotham
+FOVLabel.TextSize = 14
+FOVLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local SmoothnessSlider = Instance.new("Frame")
+SmoothnessSlider.Name = "SmoothnessSlider"
+SmoothnessSlider.Parent = MainContent
+SmoothnessSlider.Size = UDim2.new(1, 0, 0, 40)
+SmoothnessSlider.Position = UDim2.new(0, 0, 0, 80)
+SmoothnessSlider.BackgroundTransparency = 1
+
+local SmoothnessLabel = Instance.new("TextLabel")
+SmoothnessLabel.Parent = SmoothnessSlider
+SmoothnessLabel.Size = UDim2.new(0.5, 0, 0, 20)
+SmoothnessLabel.Position = UDim2.new(0, 0, 0, 0)
+SmoothnessLabel.BackgroundTransparency = 1
+SmoothnessLabel.Text = "Smoothness: "..Settings.Aimbot.Smoothness
+SmoothnessLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+SmoothnessLabel.Font = Enum.Font.Gotham
+SmoothnessLabel.TextSize = 14
+SmoothnessLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local VisualContent = Instance.new("ScrollingFrame")
+VisualContent.Name = "VisualContent"
+VisualContent.Parent = TabContent
+VisualContent.Size = UDim2.new(1, 0, 1, 0)
+VisualContent.BackgroundTransparency = 1
+VisualContent.Visible = false
+VisualContent.ScrollBarThickness = 3
+VisualContent.ScrollBarImageColor3 = Color3.fromRGB(180, 120, 255)
+
+local ESPToggle = Instance.new("TextButton")
+ESPToggle.Name = "ESPToggle"
+ESPToggle.Parent = VisualContent
+ESPToggle.Size = UDim2.new(1, 0, 0, 30)
+ESPToggle.Position = UDim2.new(0, 0, 0, 0)
+ESPToggle.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+ESPToggle.Text = ""
+ESPToggle.AutoButtonColor = false
+
+local ESPLabel = Instance.new("TextLabel")
+ESPLabel.Parent = ESPToggle
+ESPLabel.Size = UDim2.new(0.7, 0, 1, 0)
+ESPLabel.Position = UDim2.new(0, 10, 0, 0)
+ESPLabel.BackgroundTransparency = 1
+ESPLabel.Text = "ESP"
+ESPLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+ESPLabel.Font = Enum.Font.Gotham
+ESPLabel.TextSize = 14
+ESPLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local ESPStatus = Instance.new("Frame")
+ESPStatus.Parent = ESPToggle
+ESPStatus.Size = UDim2.new(0, 20, 0, 20)
+ESPStatus.Position = UDim2.new(0.9, -20, 0.15, 0)
+ESPStatus.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+
+local PlayerContent = Instance.new("ScrollingFrame")
+PlayerContent.Name = "PlayerContent"
+PlayerContent.Parent = TabContent
+PlayerContent.Size = UDim2.new(1, 0, 1, 0)
+PlayerContent.BackgroundTransparency = 1
+PlayerContent.Visible = false
+PlayerContent.ScrollBarThickness = 3
+PlayerContent.ScrollBarImageColor3 = Color3.fromRGB(180, 120, 255)
+
+local SpeedToggle = Instance.new("TextButton")
+SpeedToggle.Name = "SpeedToggle"
+SpeedToggle.Parent = PlayerContent
+SpeedToggle.Size = UDim2.new(1, 0, 0, 30)
+SpeedToggle.Position = UDim2.new(0, 0, 0, 0)
+SpeedToggle.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+SpeedToggle.Text = ""
+SpeedToggle.AutoButtonColor = false
+
+local SpeedLabel = Instance.new("TextLabel")
+SpeedLabel.Parent = SpeedToggle
+SpeedLabel.Size = UDim2.new(0.7, 0, 1, 0)
+SpeedLabel.Position = UDim2.new(0, 10, 0, 0)
+SpeedLabel.BackgroundTransparency = 1
+SpeedLabel.Text = "Speed Hack"
+SpeedLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+SpeedLabel.Font = Enum.Font.Gotham
+SpeedLabel.TextSize = 14
+SpeedLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local SpeedStatus = Instance.new("Frame")
+SpeedStatus.Parent = SpeedToggle
+SpeedStatus.Size = UDim2.new(0, 20, 0, 20)
+SpeedStatus.Position = UDim2.new(0.9, -20, 0.15, 0)
+SpeedStatus.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+
+local InfoFrame = Instance.new("Frame")
+InfoFrame.Name = "InfoFrame"
+InfoFrame.Parent = ScreenGui
+InfoFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
+InfoFrame.BorderSizePixel = 0
+InfoFrame.Position = UDim2.new(0.01, 0, 0.05, 0)
+InfoFrame.Size = UDim2.new(0, 150, 0, 100)
+
+local InfoStroke = Instance.new("UIStroke")
+InfoStroke.Color = Color3.fromRGB(180, 120, 255)
+InfoStroke.Thickness = 2
+InfoStroke.Parent = InfoFrame
+
+local TimeLabel = Instance.new("TextLabel")
+TimeLabel.Parent = InfoFrame
+TimeLabel.Size = UDim2.new(1, -10, 0, 25)
+TimeLabel.Position = UDim2.new(0, 5, 0, 5)
+TimeLabel.BackgroundTransparency = 1
+TimeLabel.Text = "Time: 00:00"
+TimeLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+TimeLabel.Font = Enum.Font.Gotham
+TimeLabel.TextSize = 14
+TimeLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local FPSLabel = Instance.new("TextLabel")
+FPSLabel.Parent = InfoFrame
+FPSLabel.Size = UDim2.new(1, -10, 0, 25)
+FPSLabel.Position = UDim2.new(0, 5, 0, 30)
+FPSLabel.BackgroundTransparency = 1
+FPSLabel.Text = "FPS: 0"
+FPSLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+FPSLabel.Font = Enum.Font.Gotham
+FPSLabel.TextSize = 14
+FPSLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local PingLabel = Instance.new("TextLabel")
+PingLabel.Parent = InfoFrame
+PingLabel.Size = UDim2.new(1, -10, 0, 25)
+PingLabel.Position = UDim2.new(0, 5, 0, 55)
+PingLabel.BackgroundTransparency = 1
+PingLabel.Text = "Ping: 0ms"
+PingLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+PingLabel.Font = Enum.Font.Gotham
+PingLabel.TextSize = 14
+PingLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+MainTab.MouseButton1Click:Connect(function()
+    MainContent.Visible = true
+    VisualContent.Visible = false
+    PlayerContent.Visible = false
+end)
+
+VisualTab.MouseButton1Click:Connect(function()
+    MainContent.Visible = false
+    VisualContent.Visible = true
+    PlayerContent.Visible = false
+end)
+
+PlayerTab.MouseButton1Click:Connect(function()
+    MainContent.Visible = false
+    VisualContent.Visible = false
+    PlayerContent.Visible = true
+end)
+
+AimbotToggle.MouseButton1Click:Connect(function()
     Settings.Aimbot.Enabled = not Settings.Aimbot.Enabled
-    AimbotButton.Text = "Aimbot: " .. (Settings.Aimbot.Enabled and "ON" or "OFF")
+    AimbotStatus.BackgroundColor3 = Settings.Aimbot.Enabled and Color3.fromRGB(50, 255, 50) or Color3.fromRGB(255, 50, 50)
 end)
 
-local ESPButton = CreateButton("ESPToggle", "ESP", UDim2.new(0, 0, 0, 40), function()
+ESPToggle.MouseButton1Click:Connect(function()
     Settings.ESP.Enabled = not Settings.ESP.Enabled
-    ESPButton.Text = "ESP: " .. (Settings.ESP.Enabled and "ON" or "OFF")
+    ESPStatus.BackgroundColor3 = Settings.ESP.Enabled and Color3.fromRGB(50, 255, 50) or Color3.fromRGB(255, 50, 50)
 end)
 
-local SpeedButton = CreateButton("SpeedToggle", "Speed Hack", UDim2.new(0, 0, 0, 80), function()
-    Settings.Misc.SpeedHack = not Settings.Misc.SpeedHack
-    SpeedButton.Text = "Speed: " .. (Settings.Misc.SpeedHack and "ON" or "OFF")
-end)
-
-local TeamCheckButton = CreateButton("TeamCheckToggle", "Team Check", UDim2.new(0, 0, 0, 120), function()
-    Settings.Aimbot.TeamCheck = not Settings.Aimbot.TeamCheck
-    TeamCheckButton.Text = "Team Check: " .. (Settings.Aimbot.TeamCheck and "ON" or "OFF")
-end)
-
-local VisibleCheckButton = CreateButton("VisibleCheckToggle", "Visible Check", UDim2.new(0, 0, 0, 160), function()
-    Settings.Aimbot.VisibleCheck = not Settings.Aimbot.VisibleCheck
-    VisibleCheckButton.Text = "Visible Check: " .. (Settings.Aimbot.VisibleCheck and "ON" or "OFF")
-end)
-
--- Функция для открытия/закрытия меню
-local function ToggleMenu()
-    MainFrame.Visible = not MainFrame.Visible
-    
-    if MainFrame.Visible then
-        local tween = TweenService:Create(
-            MainFrame,
-            TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-            {Size = UDim2.new(0, 250, 0, 230)}
-        )
-        tween:Play()
-    else
-        local tween = TweenService:Create(
-            MainFrame,
-            TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-            {Size = UDim2.new(0, 250, 0, 0)}
-        )
-        tween:Play()
+SpeedToggle.MouseButton1Click:Connect(function()
+    Settings.Movement.Speed = not Settings.Movement.Speed
+    SpeedStatus.BackgroundColor3 = Settings.Movement.Speed and Color3.fromRGB(50, 255, 50) or Color3.fromRGB(255, 50, 50)
+    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+        LocalPlayer.Character.Humanoid.WalkSpeed = Settings.Movement.Speed and Settings.Movement.SpeedValue or 16
     end
-end
-
-CloseButton.MouseButton1Click:Connect(ToggleMenu)
+end)
 
 UserInputService.InputBegan:Connect(function(input, gameProcessed)
     if input.KeyCode == Enum.KeyCode.RightShift then
-        ToggleMenu()
+        MainFrame.Visible = not MainFrame.Visible
     end
 end)
-
--- ВАЖНО: Добавляем недостающие функции для работы функционала
 
 local function GetTeam(Player)
     if not Player.Character then return nil end
@@ -290,37 +368,6 @@ local function GetClosestPlayer()
     return closestPlayer
 end
 
--- Обработчик аимбота
-local AimbotConnection
-UserInputService.InputBegan:Connect(function(input, gameProcessed)
-    if gameProcessed then return end
-    
-    -- Аимбот
-    if input.UserInputType == Settings.Aimbot.Keybind and Settings.Aimbot.Enabled then
-        local target = GetClosestPlayer()
-        if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
-            local rootPart = target.Character.HumanoidRootPart
-            
-            if AimbotConnection then
-                AimbotConnection:Disconnect()
-            end
-            
-            AimbotConnection = RunService.RenderStepped:Connect(function()
-                if not UserInputService:IsMouseButtonPressed(Settings.Aimbot.Keybind) or not Settings.Aimbot.Enabled then
-                    AimbotConnection:Disconnect()
-                    return
-                end
-                
-                local cameraCFrame = Camera.CFrame
-                local targetPosition = rootPart.Position
-                local smoothed = cameraCFrame:Lerp(CFrame.new(cameraCFrame.Position, targetPosition), Settings.Aimbot.Smoothness / 100)
-                Camera.CFrame = smoothed
-            end)
-        end
-    end
-end)
-
--- ESP система
 local ESPObjects = {}
 
 local function CreateESP(player)
@@ -337,7 +384,7 @@ local function CreateESP(player)
             return
         end
         
-        if not IsEnemy(self.Player) and not Settings.ESP.ShowTeam then
+        if not IsEnemy(self.Player) and not Settings.ESP.TeamCheck then
             for _, drawing in pairs(self.Drawings) do
                 drawing.Visible = false
             end
@@ -358,18 +405,17 @@ local function CreateESP(player)
             return
         end
         
-        -- Текст с именем и расстоянием
         if not self.Drawings.Text then
             self.Drawings.Text = Drawing.new("Text")
-            self.Drawings.Text.Size = Settings.ESP.TextSize
+            self.Drawings.Text.Size = 14
             self.Drawings.Text.Outline = true
             self.Drawings.Text.Center = true
             self.Drawings.Text.Color = Color3.new(1, 1, 1)
         end
         
         self.Drawings.Text.Position = Vector2.new(screenPosition.X, screenPosition.Y)
-        self.Drawings.Text.Text = player.Name .. (Settings.ESP.ShowDistance and (" (" .. math.floor((rootPart.Position - Camera.CFrame.Position).Magnitude) .. "m)") or "")
-        self.Drawings.Text.Visible = Settings.ESP.Enabled
+        self.Drawings.Text.Text = player.Name .. (Settings.ESP.Distance and (" (" .. math.floor((rootPart.Position - Camera.CFrame.Position).Magnitude) .. "m)") or "")
+        self.Drawings.Text.Visible = Settings.ESP.Enabled and Settings.ESP.Names
     end
     
     function esp:Remove()
@@ -382,14 +428,12 @@ local function CreateESP(player)
     ESPObjects[player] = esp
 end
 
--- Инициализация ESP для всех игроков
 for _, player in ipairs(Players:GetPlayers()) do
     if player ~= LocalPlayer then
         CreateESP(player)
     end
 end
 
--- Обработчики новых игроков
 Players.PlayerAdded:Connect(function(player)
     CreateESP(player)
 end)
@@ -400,38 +444,27 @@ Players.PlayerRemoving:Connect(function(player)
     end
 end)
 
--- Система SpeedHack
-local originalWalkSpeed = 16
-local SpeedHackConnection
+local startTime = os.time()
+local lastUpdate = 0
 
-local function UpdateSpeedHack()
-    if SpeedHackConnection then
-        SpeedHackConnection:Disconnect()
-    end
-    
-    if Settings.Misc.SpeedHack then
-        SpeedHackConnection = RunService.Heartbeat:Connect(function()
-            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
-                LocalPlayer.Character.Humanoid.WalkSpeed = originalWalkSpeed * Settings.Misc.SpeedMultiplier
-            end
-        end)
-    else
-        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
-            LocalPlayer.Character.Humanoid.WalkSpeed = originalWalkSpeed
-        end
-    end
-end
-
--- Обновляем SpeedHack при изменении настроек
-SpeedButton.MouseButton1Click:Connect(function()
-    Settings.Misc.SpeedHack = not Settings.Misc.SpeedHack
-    SpeedButton.Text = "Speed: " .. (Settings.Misc.SpeedHack and "ON" or "OFF")
-    UpdateSpeedHack()
-end)
-
--- Основной цикл обновления ESP
-RunService.RenderStepped:Connect(function()
+RunService.RenderStepped:Connect(function(deltaTime)
     for _, esp in pairs(ESPObjects) do
         esp:Update()
+    end
+    
+    if os.time() - lastUpdate >= 1 then
+        local playTime = os.time() - startTime
+        local minutes = math.floor(playTime / 60)
+        local seconds = playTime % 60
+        TimeLabel.Text = string.format("Time: %02d:%02d", minutes, seconds)
+        
+        local fps = math.floor(1 / deltaTime)
+        FPSLabel.Text = "FPS: "..fps
+        
+        lastUpdate = os.time()
+    end
+    
+    if Settings.Movement.Speed and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+        LocalPlayer.Character.Humanoid.WalkSpeed = Settings.Movement.SpeedValue
     end
 end)
