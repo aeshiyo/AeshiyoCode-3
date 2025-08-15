@@ -1,61 +1,37 @@
-local ESPLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Eazvy/UILibs/main/ESP/Universal.lua"))()
-local NotifyLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Eazvy/UILibs/main/NotificationLib.lua"))()
+local Akiri = loadstring(game:HttpGet("https://raw.githubusercontent.com/Eazvy/UILibs/main/Librarys/Akiri/Akiri.lua"))()
 
-local ESP = {
-    Enabled = false,
-    Boxes = true,
-    Names = true,
-    Distance = true,
-    Health = false,
-    TeamColor = true,
-    Fill = 0.1
-}
+local Window = Akiri:CreateWindow({
+    Title = "Aeshiyo Murder Mystery II",
+    SubTitle = "by AeshiyoCode",
+    Size = UDim2.new(0, 500, 0, 350)
+})
 
-local Notifications = {
-    Enabled = true,
-    Duration = 3
-}
+local MainTab = Window:CreateTab("Главная")
+local VisualsTab = Window:CreateTab("Визуалы")
+local SettingsTab = Window:CreateTab("Настройки")
 
-local function SetupESP()
-    ESPLib:Initialize()
-    ESPLib:Toggle(ESP.Enabled)
-    
-    ESPLib.Settings = {
-        Box = ESP.Boxes,
-        Name = ESP.Names,
-        Distance = ESP.Distance,
-        HealthBar = ESP.Health,
-        TeamColor = ESP.TeamColor,
-        FillTransparency = ESP.Fill
-    }
-end
+local EspSection = VisualsTab:CreateSection("ESP")
+local PlayerSection = MainTab:CreateSection("Игрок")
 
-local function ShowNotification(title, text)
-    if Notifications.Enabled then
-        NotifyLib:Notify({
-            Title = title,
-            Description = text,
-            Duration = Notifications.Duration
-        })
+MainTab:CreateButton({
+    Name = "Тест функция",
+    Callback = function()
+        print("Функция активирована")
     end
-end
+})
 
-local ESPToggle = CreateToggle(VisualContent, "ESP Enabled", UDim2.new(0, 0, 0, 0), "ESP", "Enabled")
-local BoxToggle = CreateToggle(VisualContent, "Box ESP", UDim2.new(0, 0, 0, 35), "ESP", "Boxes")
-local NameToggle = CreateToggle(VisualContent, "Name ESP", UDim2.new(0, 0, 0, 70), "ESP", "Names")
+VisualsTab:CreateToggle({
+    Name = "Включить ESP",
+    Default = false,
+    Callback = function(Value)
+        _G.ESPEnabled = Value
+    end
+})
 
-ESP.Enabled = Settings.ESP.Enabled
-ESP.Boxes = Settings.ESP.Box
-ESP.Names = Settings.ESP.Name
-
-ESP.Enabled = Settings.ESP.Enabled
-ESP.Boxes = Settings.ESP.Box
-ESP.Names = Settings.ESP.Name
-
-ESP.Enabled = Settings.ESP.Enabled
-ESP.Boxes = Settings.ESP.Box
-ESP.Names = Settings.ESP.Name
-
-SetupESP()
-
-ShowNotification("Phantom Menu", "ESP System Loaded")
+SettingsTab:CreateKeybind({
+    Name = "Открыть меню",
+    Default = Enum.KeyCode.RightControl,
+    Callback = function(Key)
+        Window:Toggle(Key)
+    end
+})
